@@ -1,23 +1,34 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licznik Otwarć</title>
-</head>
-<body>
-    <h1>Licznik Otwarć Strony</h1>
-    <p>Strona była otwierana <span id="counter">0</span> razy.</p>
+    <title>Counter</title>
     <script>
-        function updateCounter() {
-            let count = parseInt(localStorage.getItem('pageViews'), 10) || 0;
-            count++;
-            localStorage.setItem('pageViews', count);
-            document.getElementById('counter').innerText = count;
+        async function incrementCounter() {
+            const response = await fetch('https://api.github.com/repos/username/repository/contents/counter.txt', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token YOUR_GITHUB_TOKEN',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Increment counter',
+                    content: btoa((parseInt(await (await fetch('https://raw.githubusercontent.com/username/repository/main/counter.txt')).text()) || 0) + 1)
+                })
+            });
+            if (response.ok) {
+                document.getElementById('counter').innerText = await (await fetch('https://raw.githubusercontent.com/username/repository/main/counter.txt')).text();
+            } else {
+                document.getElementById('counter').innerText = 'Error';
+            }
         }
 
-        // Wywołaj funkcję na załadowanie strony
-        document.addEventListener('DOMContentLoaded', updateCounter);
+        window.onload = incrementCounter;
     </script>
+</head>
+<body>
+    <h1>Counter</h1>
+    <p>Page views: <span id="counter">Loading...</span></p>
 </body>
 </html>
