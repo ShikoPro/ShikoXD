@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licznik Otwarć</title>
+</head>
+<body>
+    <h1>Licznik Otwarć Strony</h1>
+    <p>Strona była otwierana <span id="counter">0</span> razy.</p>
+    <script>
+        function updateCounter() {
+            let count = parseInt(localStorage.getItem('pageViews'), 10) || 0;
+            count++;
+            localStorage.setItem('pageViews', count);
+            document.getElementById('counter').innerText = count;
+        }
+
+        // Wywołaj funkcję na załadowanie strony
+        document.addEventListener('DOMContentLoaded', updateCounter);
+    </script>
+</body>
+</html>
